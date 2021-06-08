@@ -1,15 +1,15 @@
 function [pArea, tOpt, flag, param] = thresholdImage(img, plt)
 
 % thresholdImage takes in a grayscale image (8-bit) and attempts to find an optimal
-% threshold to binarize it by assuming that its intensity histogram is a combination of 
+% threshold to binarize it by assuming that its intensity histogram is a combination of
 % two log-normal distributions (foreground and background). The histogram is decomposed
-% with a least-squares method, and the threshold is defined as the intensity at which 
+% with a least-squares method, and the threshold is defined as the intensity at which
 % class uncertainty is maximum.
 %
 % USAGE:
 %
 %   [pArea, tOpt, flag, param] = thresholdImage(img, plt)
-% 
+%
 % INPUTS:
 %
 %   img:    8-bit grayscale image to be thresholded
@@ -29,7 +29,7 @@ function [pArea, tOpt, flag, param] = thresholdImage(img, plt)
 
 %% Get histogram (CDF) of image and define bin centers for passing to the parameter fit routine
 
-% Set pot to 0 by default if argument is not included
+% Set plot to 0 by default if argument is not included
 if nargin == 1
     plt = 0;
 end
@@ -44,4 +44,3 @@ centers = 0.5*(edges(2:end)+edges(1:end-1));
 
 %% Get percentage coverage based on optimal threshold
 pArea = 100*sum(img(:)>=tOpt)/numel(img);
-
