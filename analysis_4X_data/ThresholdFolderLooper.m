@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This script loops through a folder structure, where at the bottom each folder contains
 % 8-bit images to be thresholded using the histogram decomposition functions. This script
-% assumes that all images are at an equal depth in the folder structure and is only written 
+% assumes that all images are at an equal depth in the folder structure and is only written
 % for convenience. The folder structure we assume is:
 % Master directory:
 %     Directories with treatments (e.g. drugs)
@@ -10,9 +10,9 @@
 % Your folder structure might be different and each level might correspond
 % to a different thing.
 %
-% This script outputs a structure called output but also stores a text file with its  
+% This script outputs a structure called output but also stores a text file with its
 % values in the master directory.
-% 
+%
 % Author: Jose L. Cadavid, University of Toronto, 2021
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -46,7 +46,7 @@ drugs = setdiff({listM([listM.isdir]).name},{'.','..'});
 % Loop through drugs
 for drg = 1:numel(drugs)
     disp(strcat('Processing treatment: ', drugs{drg}));
-    % Get list of files in drug folder 
+    % Get list of files in drug folder
     listD = dir(fullfile(master,drugs{drg},'*'));
     % List of subfolders in drug (reps)
     reps = setdiff({listD([listD.isdir]).name},{'.','..'});
@@ -82,8 +82,8 @@ for drg = 1:numel(drugs)
             output(ii).pArea = pArea;
             output(ii).tOpt = tOpt;
             % Percentage of saturated pixels
-            output(ii).pSat = sum(im==255,'all')/numel(im)*100; 
-            
+            output(ii).pSat = sum(im==255,'all')/numel(im)*100;
+
             % Write in text file
             fprintf(fid,"%s\t %s\t %s\t %u\t %u\t %u\t %.2f\t %0.2f\t %u\t %.2f \n", ...
                 drugs{drg}, reps{rp}, imgs{im},...
