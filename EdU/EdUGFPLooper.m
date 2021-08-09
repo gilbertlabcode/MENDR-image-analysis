@@ -1,11 +1,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This script loops through a folder that contains resampled 3D
-% single-channel images (EdU, GFP, Nuclei) of different sampels (identified
+% single-channel images (EdU, GFP, Nuclei) of different samples (identified
 % by a number on the image).
 %
-% This script outputs a structure called output but also stores a text file with its  
+% This script outputs a structure called output but also stores a text file with its
 % values in the master directory selected.
-% 
+%
 % Author: Jose L. Cadavid, University of Toronto, 2021
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -25,7 +25,7 @@ disp(strcat('Processing folder: ', master));
 % Get text file exported by FIJI with image characteristics
 [filename, pathname] = uigetfile({'*.txt'},'Select text file with info');
 % Read table
-imgTable = readtable(strcat(pathname,filename));
+imgTable = readtable(strcat(pathname,filename), 'Delimiter', {'\t'});
 % Number of images is the height of the table
 nImgs = height(imgTable);
 
