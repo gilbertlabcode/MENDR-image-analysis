@@ -17,7 +17,7 @@ function [nucStats, nNuclei, nGFP, nSAA, nGFPSAA] = getNuclearFractions(imgNuc, 
 %
 % OUTPUTS:
 %
-%   nucStats:    Table with volume of segmented nuclei. It also indicates
+%   nucStats:    Table with volume of automatically segmented nuclei. It also indicates
 %                if nuclei are GFP, SAA or double-positive
 %   nNuclei:     Number of detected nuclei
 %   nGFP:        Number of detected nuclei in a GFP structure
