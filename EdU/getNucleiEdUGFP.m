@@ -13,7 +13,7 @@ function [nucGFP, nGFP, nEdUGFP] = getNucleiEdUGFP(imgNuc, imgGFP, imgEdU, scale
 %   imgNuc:    3D 8-bit grayscale image of the nuclei
 %   imgGFP:    3D 8-bit grayscale image of the GFP channel
 %   imgEdU:    3D 8-bit grayscale image of the EdU channel
-%   scale:     Size of a vocel in microns
+%   scale:     Size of a voxel in microns
 %   vMin:      Smallest volume of nuclei in cubic microns
 %
 % OUTPUTS:
