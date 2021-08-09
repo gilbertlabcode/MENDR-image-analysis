@@ -2,7 +2,7 @@
 
 ## Description
 
-Steps to use the scripts in this folder to analyze images (20x magnification) of engineered muscle templates. That have been stained for EdU+ nuclei. The scripts assume that the master folder to be analyzed has the following structure:
+Steps to use the scripts in this folder to analyze images (20x magnification) of engineered muscle templates that have been stained for EdU+ nuclei. The scripts assume that the master folder to be analyzed has the following structure:
 
 Master -
   Treatments (e.g. drugs tested) -
@@ -22,3 +22,5 @@ The scripts will first create anisotropic 3D single-channel images using ImageJ 
 2. Analyze images with MATLAB:
 
   Open MATLAB and make sure the directory with all the scripts is in your search path, or that it is your current directory. Run the script "EdUGFPLooper"; it will prompt you to select the folder with the resliced images produced by ImageJ, as well as the text file exported by ImageJ. The script will export a new text file with the GFP+EdU+ objects (%).
+
+  The script "EdUGFPLooper" is a wrapper to automate batch analysis of multiple images. Open this script for more details on how each image is analyzed.
