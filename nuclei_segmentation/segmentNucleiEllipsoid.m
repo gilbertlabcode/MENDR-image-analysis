@@ -1,7 +1,7 @@
-function [imgLabelNew,dNuc,oeNuc] = segmentNucleiEllipsoid(imgNuc, scale)
+function [imgLabelNew, dNuc, oeNuc, imgBig] = segmentNucleiEllipsoid(imgNuc, scale)
 
 % segmentNucleiEllipsoids takes a 3D image (isotropic) of nuclei and
-% attempts to segment it. Segmentation on fitting ellipsoids to
+% attempts to segment it. Segmentation done by fitting ellipsoids to
 % binary blobs and k-means with Mahalanobis distance. Initial binarization 
 % done by smoothing the image with a non-linear filter to preserve edges as 
 % much as possible, and then aplying Otsu's method
@@ -17,8 +17,14 @@ function [imgLabelNew,dNuc,oeNuc] = segmentNucleiEllipsoid(imgNuc, scale)
 %
 % OUTPUTS:
 %
-%   nucStats:    Table with volume of segmented nuclei. It also indicates
-%                if nuclei are GFP, SAA or double-positive
+%   imgLabelNew:    Label image of the segmented nuclei that didn't come
+%                   from big blobs
+%   dNuc:           Semiaxes of the segmented nuclei (based on ellipsoid
+%                   fitting)
+%   oeNuc:          Centroids of the segmented nuclei (based on ellipsoid
+%                   fitting)
+%   imgBig:         Label image that stores blobs that are larger than 10x
+%                   the expected size of nuclei and are not segmented accurately
 %
 % AUTHOR:
 %   Jose L. Cadavid, University of Toronto, 2021
@@ -113,27 +119,38 @@ imgLabelNew = zeros(size(imgLabel));
 % Matrices for storing ellipsoid centers and semiaxes 
 dNuc = [];
 oeNuc = [];
-%Counter for labelled nuclei
+% Counter for labelled nuclei
 nucCount = 0;
-
+% Counter for big blobs
+bigCount = 0;
+imgBig = imgLabelNew;
 % Split blobs, one by one, based on ellipsoid clustering
 for i = 1:nBlobs
-    
-    % Get optimal split of blob in terms of ellipsoids (optimal number
-    % calculated internally). Also return the center (oeOpt) and semiaxes
-    % length (dOpt) of those ellipsoids. Ignoring the rotation angles but
-    % could be obtained as well
-    [dDummy,oeDummy,idxVox,idxClust] = splitNucleiClusteringFaster(imgLabel==i,...
-                                        imgBound==i, statsL(i,:), PARAM, scale);
-    % Get the number of new ellipsoids
-    [kOpt,~] = size(oeDummy);
-    % Label the voxels of the blob indicated by idxVox with the labels
-    % idxClust (adding the current nuclei counter)
-    imgLabelNew(idxVox) = idxClust + nucCount;
-    % Store semiaxes length and centers
-    dNuc = [dNuc;dDummy];
-    oeNuc = [oeNuc;oeDummy];
-    % Update nuclei counter
-    nucCount = nucCount + kOpt;
+    if statsL.Volume(i) >= 10*PARAM.vMedian
+        % If the blob is too large the segmentation might be innacurate,
+        % so we exclude this blob and handle it in a different routine
+        % based on mean volume
+        
+        % Add to an image that carries the "big" blobs
+        bigCount = bigCount + 1;
+        imgBig(statsL.VoxelIdxList{i}) = bigCount;
+    else
+        % Get optimal split of blob in terms of ellipsoids (optimal number
+        % calculated internally). Also return the center (oeOpt) and semiaxes
+        % length (dOpt) of those ellipsoids. Ignoring the rotation angles but
+        % could be obtained as well
+        [dDummy,oeDummy,idxVox,idxClust] = splitNucleiClusteringFaster(imgLabel==i,...
+                                            imgBound==i, statsL(i,:), PARAM, scale);
+        % Get the number of new ellipsoids
+        [kOpt,~] = size(oeDummy);
+        % Label the voxels of the blob indicated by idxVox with the labels
+        % idxClust (adding the current nuclei counter)
+        imgLabelNew(idxVox) = idxClust + nucCount;
+        % Store semiaxes length and centers
+        dNuc = [dNuc;dDummy];
+        oeNuc = [oeNuc;oeDummy];
+        % Update nuclei counter
+        nucCount = nucCount + kOpt;
+    end
 end
 

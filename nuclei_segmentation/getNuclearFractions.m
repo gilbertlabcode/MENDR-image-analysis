@@ -33,12 +33,13 @@ imgGFP = uint8(imgGFP);
 imgSAA = uint8(imgSAA);
 
 %% Binarize and segment nuclei with the iterative k-cluster
-[imgLabel, ~, ~] = segmentNucleiEllipsoid(imgNuc, scale);
+[imgLabel, ~, ~, imgBig] = segmentNucleiEllipsoid(imgNuc, scale);
 % Get properties of nuclei (only volume)
 nucStats = regionprops3(imgLabel, 'Volume', 'VoxelIdxList');
 % Remove any nuclei with zero volume that might have been mislabeled
 nucStats(nucStats.Volume(:)==0,:) = [];
 nNuclei = height(nucStats);
+meanVol = mean(nucStats.Volume(:));
 
 %% Binarize GFP and SAA channels
 
@@ -83,3 +84,33 @@ end
 nGFP = sum(nucStats.GFP(:));
 nSAA = sum(nucStats.SAA(:));
 nGFPSAA = sum(nucStats.SAAGFP(:));
+
+%% Process the big blobs
+
+% These blobs are not segmented properly so we estimate the number of
+% nuclei the have by dividing their volume by the mean volume of segmented
+% nuclei. We then estimate the number of GFP/SAA based on the fraction of
+% SAA/GFP voxels times the number of estimated nuclei. In practice, few
+% blobs will go through this process so the impact of this estimation step
+% is not huge
+
+bigStats = regionprops3(imgBig, 'Volume', 'VoxelIdxList');
+for i = 1:height(bigStats)
+    nucRegion = bigStats.VoxelIdxList{i,1};
+    nucVol = bigStats.Volume(i);
+    % Estimate number of nuclei based on volume
+    nNew = round(nucVol/meanVol);
+    % Estimate the fraction of the blob that overlaps with GFP/SAA
+    fracGFP = sum(imgGFP(nucRegion) > tGFP)/nucVol;
+    fracSAA = sum(imgSAA(nucRegion) > tSAA)/nucVol;
+    fracSAAGFP = sum(imgGFP(nucRegion) > tGFP & imgSAA(nucRegion) > tSAA)/nucVol;
+    % Add counts to total counts 
+    nNuclei = nNuclei + nNew;
+    nGFP = nGFP + round(fracGFP*nNew);
+    nSAA = nSAA + round(fracSAA*nNew);
+    nGFPSAA = nGFPSAA + round(fracSAAGFP*nNew);
+end
+    
+
+
+
