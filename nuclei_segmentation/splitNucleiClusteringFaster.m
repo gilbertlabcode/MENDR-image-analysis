@@ -64,7 +64,7 @@ if (Vol < PARAM.vMax) && (blobEllipticity([x,y,z],Vol,statsImg.SurfaceArea) > 0.
     
 else
     %% Break blob into ellipsoids
-    
+
     % The blob cannot be considered a single ellipsoid and we attempt to
     % split it. The range of k to be explored is defined based on the volume
     % of the blob and the median volume of the nuclei (can be tuned depending on the expected nuclei size).
@@ -156,7 +156,7 @@ else
     % Store the parameters of the ellipsoids. Not interested in the rotation of
     % ellipsoids at this point, so instead of passing the mapping matrix I can
     % pass the semiaxes of the ellipsoid. At this point it is possible that
-    % some small nuclei have been sgmented or have appeared (despite the penalty terms) so we can
+    % some small nuclei have been segmented or have appeared (despite the penalty terms) so we can
     % remove them. The voxels will still be lumped with the closest
     % ellipsoid when splitting the blob. Only do if there is more than one
     % ellipsoid in blob!!
@@ -169,13 +169,19 @@ else
     end
        
     if kOpt>1
-        dOpt(Vol<PARAM.vMin,:) = [];
-        oeOpt(Vol<PARAM.vMin,:) = [];
-        MeOpt(:,:,Vol<PARAM.vMin) = [];
+        % Look if any ellipsoid is quite small and remove them
+        idxRemove = Vol<PARAM.vMin/2;
+        % To prevent errors, keep at least one ellipsoid (the largest one)
+        if all(idxRemove)
+            idxRemove(Vol == max(Vol)) = 0;
+        end
+        dOpt(idxRemove,:) = [];
+        oeOpt(idxRemove,:) = [];
+        MeOpt(:,:,idxRemove) = [];
     end
     
-    %Label voxels in blob according to optimal ellipsoids: Return linear index
-    %of voxels and their cluster label
+    % Label voxels in blob according to optimal ellipsoids: Return linear index
+    % of voxels and their cluster label
     [~,idxClust] = labelSplitNuclei(size(imgBin),[x y z],MeOpt,oeOpt);
     
 end
