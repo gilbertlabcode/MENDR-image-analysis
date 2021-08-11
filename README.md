@@ -10,6 +10,8 @@ Add the folders in the repository to your search path before running any pipelin
 
 ## Contents
 
+* Myotube_geometry_analysis: Scripts for analyzing myotube geometry features (average width, variation in width, length, and straightness) in (40X) images of engineered skeletal muscle myotubes.
+
 * analysis_4x_data: Scripts for analyzing cell coverage in low magnification (4X) images of engineered muscle tissue based on histogram decomposition.
 
 * EdU: Scripts for getting EdU+ (%) cells in 3D images of engineered muscle tissue with sparse content of GFP+ cells.
