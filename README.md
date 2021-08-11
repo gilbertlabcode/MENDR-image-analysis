@@ -1,6 +1,6 @@
 # MENDR image analysis
 
-This repository contains MATLAB scripts and functions used to perform automatic image analysis of the datasets presented in the article **"An in vitro functional assay to predict in vivo muscle stem cell mediated repair"**. If you use or modify these scripts, we kindly ask you to cite the aforementioned publication.
+This repository contains MATLAB and FIJI scripts and functions used to perform automatic image analysis of the datasets presented in the article **"MEndR: An in vitro functional assay to predict in vivo muscle stem cell mediated repair"**. If you use or modify these scripts, we kindly ask you to cite the aforementioned publication.
 
 ## Requirements
 
