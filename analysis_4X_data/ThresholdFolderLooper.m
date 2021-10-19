@@ -82,7 +82,7 @@ for drg = 1:numel(drugs)
             output(ii).pArea = pArea;
             output(ii).tOpt = tOpt;
             % Percentage of saturated pixels
-            output(ii).pSat = sum(im==255,'all')/numel(im)*100;
+            output(ii).pSat = sum(img==255,'all')/numel(img)*100;
 
             % Write in text file
             fprintf(fid,"%s\t %s\t %s\t %u\t %u\t %u\t %.2f\t %0.2f\t %u\t %.2f \n", ...
